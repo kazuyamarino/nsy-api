@@ -1,0 +1,11 @@
+language: php
+
+php:
+  - 7.2
+  - 7.3
+  - 7.4
+
+env:
+  - APP_ENV=development
+  - APP_DIR=nsy
+  - DB_CONNECTION=mysql
