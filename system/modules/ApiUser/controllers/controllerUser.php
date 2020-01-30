@@ -93,17 +93,13 @@ class controllerUser extends Load
 
 	public function update_data_users($id)
 	{
-		// if ( is_request_put() ) {
-		// 	$array = get_parsed_body();
-		// } else {
-		// 	$d_json = fetch_json(["status" => "method incorrect", "data" => 0], 400);
-		// 	echo $d_json;
-		// 	exit();
-		// }
-		$array = get_parsed_body();
-		// $user_name     = secure_input(post('username'));
-		// $user_password = secure_input(sha1(post('password')));
-		// $user_status   = secure_input(post('status'));
+		if ( is_request_post() ) {
+			$array = get_parsed_array();
+		} else {
+			$d_json = fetch_json(["status" => "method incorrect", "data" => 0], 400);
+			echo $d_json;
+			exit();
+		}
 
 		$user_name     = secure_input($array['username']);
 		$user_password = secure_input(sha1($array['password']));

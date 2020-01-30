@@ -93,24 +93,6 @@ function is_request_post()
  * @param  string  $val
  * @return array
  */
- function get_parsed_body()
- {
- 	if ( is_request_post() ) {
- 		$req_post = Request::input('POST');
- 		$arr = $req_post()->as_array();
- 	} elseif ( is_request_get() ) {
- 		$req_get = Request::input('GET');
- 		$arr = $req_get()->as_array();
- 	} elseif ( is_request_delete() ) {
- 		$req_del = Request::input('DELETE');
- 		$arr = $req_del()->as_array();
- 	} elseif ( is_request_put() ) {
- 		$req_put = Request::input('PUT');
- 		$arr = $req_put()->as_array();
- 	}
-
- 	return $arr;
-}
 function get_parsed_array($filters = array(), $val = null)
 {
 	if ( is_request_post() ) {
