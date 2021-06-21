@@ -7,7 +7,7 @@
 *
 * @type {String}
 */
-var dirname = "nsy-api"; // defined
+var dirname = "nsy"; // defined
 // var dirname = ""; // undefined
 
 function base_url(url)
