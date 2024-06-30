@@ -24,7 +24,7 @@ class users_table_29062024_225137
 			Mig::varchar('usercode')->not_null(),
 			Mig::varchar('username')->not_null(),
 			Mig::text('password')->not_null(),
-			Mig::text('status')->null(),
+			Mig::varchar('status')->null(),
 			Mig::primary('id')
 		])->index('BTREE', 'id');
 	}
