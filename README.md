@@ -33,8 +33,8 @@ Because this time I only created an API, so I only used Models and Controllers, 
 >    │       ├── Controllers
 >    │       │   ├──controllerUser.php
 >    │       ├── Models
->    │       │   ├──modelrUser.php
->    │       └── Views
+>    │           ├──modelUser.php
+>    │      
 >    │           
 >```
 
