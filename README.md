@@ -74,7 +74,7 @@ GET /users/data
 
 **To search for records in the table the request can be written in URL format as:**
 
-```text
+```php
 POST /users/data
 
 Create Body -> form-data : keywords
@@ -82,7 +82,7 @@ Create Body -> form-data : keywords
 
 **To insert records into the table the request can be written in URL format as:**
 
-```text
+```php
 POST /users/insert
 
 Create Body -> form-data : 
