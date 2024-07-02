@@ -74,6 +74,7 @@ class ComposerStaticInityour_suffixed
         ),
         'F' => 
         array (
+            'Firebase\\JWT\\' => 13,
             'Faker\\' => 6,
         ),
         'D' => 
@@ -192,6 +193,10 @@ class ComposerStaticInityour_suffixed
         'Josantonius\\Cookie\\' => 
         array (
             0 => __DIR__ . '/..' . '/josantonius/cookie/src',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Faker\\' => 
         array (
@@ -850,6 +855,14 @@ class ComposerStaticInityour_suffixed
         'Faker\\Provider\\zh_TW\\Text' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/zh_TW/Text.php',
         'Faker\\UniqueGenerator' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/UniqueGenerator.php',
         'Faker\\ValidGenerator' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/ValidGenerator.php',
+        'Firebase\\JWT\\BeforeValidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/BeforeValidException.php',
+        'Firebase\\JWT\\CachedKeySet' => __DIR__ . '/..' . '/firebase/php-jwt/src/CachedKeySet.php',
+        'Firebase\\JWT\\ExpiredException' => __DIR__ . '/..' . '/firebase/php-jwt/src/ExpiredException.php',
+        'Firebase\\JWT\\JWK' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWK.php',
+        'Firebase\\JWT\\JWT' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWT.php',
+        'Firebase\\JWT\\JWTExceptionWithPayloadInterface' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWTExceptionWithPayloadInterface.php',
+        'Firebase\\JWT\\Key' => __DIR__ . '/..' . '/firebase/php-jwt/src/Key.php',
+        'Firebase\\JWT\\SignatureInvalidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/SignatureInvalidException.php',
         'Josantonius\\Cookie\\Cookie' => __DIR__ . '/..' . '/josantonius/cookie/src/Cookie.php',
         'Josantonius\\Cookie\\Exceptions\\CookieException' => __DIR__ . '/..' . '/josantonius/cookie/src/Exceptions/CookieException.php',
         'Josantonius\\Cookie\\Facades\\Cookie' => __DIR__ . '/..' . '/josantonius/cookie/src/Facades/Cookie.php',
@@ -2061,6 +2074,8 @@ class ComposerStaticInityour_suffixed
         'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
         'System\\Apps\\General\\Controllers\\Controller_Welcome' => __DIR__ . '/../../..' . '/System/Apps/General/Controllers/Controller_Welcome.php',
         'System\\Apps\\General\\Models\\Model_Welcome' => __DIR__ . '/../../..' . '/System/Apps/General/Models/Model_Welcome.php',
+        'System\\Apps\\Modules\\ApiUser\\Controllers\\controllerUser' => __DIR__ . '/../../..' . '/System/Apps/Modules/ApiUser/Controllers/controllerUser.php',
+        'System\\Apps\\Modules\\ApiUser\\Models\\modelUser' => __DIR__ . '/../../..' . '/System/Apps/Modules/ApiUser/Models/modelUser.php',
         'System\\Apps\\Modules\\HMVC\\Controllers\\Controller_Hello' => __DIR__ . '/../../..' . '/System/Apps/Modules/HMVC/Controllers/Controller_Hello.php',
         'System\\Apps\\Modules\\HMVC\\Models\\Model_Hello' => __DIR__ . '/../../..' . '/System/Apps/Modules/HMVC/Models/Model_Hello.php',
         'System\\Core\\DB' => __DIR__ . '/../../..' . '/System/Core/DB.php',
@@ -2107,6 +2122,7 @@ class ComposerStaticInityour_suffixed
         'System\\Libraries\\Validate' => __DIR__ . '/../../..' . '/System/Libraries/Validate.php',
         'System\\Middlewares\\AfterLayer' => __DIR__ . '/../../..' . '/System/Middlewares/AfterLayer.php',
         'System\\Middlewares\\BeforeLayer' => __DIR__ . '/../../..' . '/System/Middlewares/BeforeLayer.php',
+        'System\\Migrations\\api_table_29062024_225137' => __DIR__ . '/../../..' . '/System/Migrations/api_table_29062024_225137.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
         'TheSeer\\Tokenizer\\NamespaceUri' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUri.php',
         'TheSeer\\Tokenizer\\NamespaceUriException' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUriException.php',

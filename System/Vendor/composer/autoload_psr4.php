@@ -31,6 +31,7 @@ return array(
     'Josantonius\\Session\\' => array($vendorDir . '/josantonius/session/src'),
     'Josantonius\\Json\\' => array($vendorDir . '/josantonius/json/src'),
     'Josantonius\\Cookie\\' => array($vendorDir . '/josantonius/cookie/src'),
+    'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'Faker\\' => array($vendorDir . '/fakerphp/faker/src/Faker'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),

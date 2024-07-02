@@ -4,158 +4,195 @@ namespace System\Apps\Modules\ApiUser\Controllers;
 
 use System\Apps\Modules\ApiUser\Models\modelUser;
 use System\Core\Load;
+use System\Middlewares\BeforeLayer;
 
 class controllerUser extends Load
 {
+    private $beforeLayer;
 
-	public function show_data_users()
-	{
-		$d = Load::model(modelUser::class)->data_users();
-		$d_json = json_fetch(["status" => "Success", "data" => $d], 200);
+    public function __construct()
+    {
+        $this->beforeLayer = new BeforeLayer();
+    }
 
-		echo $d_json;
-		exit();
-	}
+    // Example login method to generate JWT token
+    public function login()
+    {
+        if (request_is_post()) {
+            $username = secure_input(fetch_raw_json('username'));
+            $password = secure_input(sha1(fetch_raw_json('password')));
 
-	public function search_data_users()
-	{
-		if (request_is_post()) {
-			$array    = request_as_array();
-			$keywords = $array['keywords'];
+            $user = Load::model(modelUser::class)->login($username, $password);
 
-			if (not_filled($keywords)) {
-				$d_json = json_fetch(["status" => "Data keywords is undefined or does not exist", "data" => 0], 400);
+            if ($user) {
+                $token = $this->beforeLayer->generate_jwt($user['username']);
+                $d_json = fetch_json(["status" => "Successfully generated tokens", "token" => $token], 200);
+                echo $d_json;
+                exit();
+            } else {
+                $d_json = fetch_json(["status" => "Login failed", "message" => "Invalid username or password"], 400);
+                echo $d_json;
+                exit();
+            }
+        } else {
+            $d_json = fetch_json(["status" => "HTTP method incorrect", "data" => 0], 400);
+            echo $d_json;
+            exit();
+        }
+    }
 
-				echo $d_json;
-				exit;
-			}
+    // Example method secured with JWT middleware
+    public function show_data_users()
+    {
+        $this->beforeLayer->verify_jwt();
 
-			$string = [
-				':username' => '%' . $keywords . '%',
-				':usercode' => '%' . $keywords . '%'
-			];
+        $d = Load::model(modelUser::class)->data_users();
+        $d_json = fetch_json(["status" => "Successfully retrieved all data", "data" => $d], 200);
 
-			$d = Load::model(modelUser::class)->search_data_users($string);
-			$d_json = json_fetch(["status" => "Success", "data" => $d], 200);
+        echo $d_json;
+        exit();
+    }
 
-			echo $d_json;
-			exit();
-		} else {
-			$d_json = json_fetch(["status" => "HTTP method incorrect", "data" => 0], 400);
+    // Example method secured with JWT middleware
+    public function search_data_users()
+    {
+        $this->beforeLayer->verify_jwt();
 
-			echo $d_json;
-			exit;
-		}
-	}
+        if (request_is_post()) {
+            $keywords = fetch_raw_json('keywords');
 
-	public function add_data_users()
-	{
-		if (request_is_post()) {
-			$array         = request_as_array();
-			$generate_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+            if (not_filled($keywords)) {
+                $d_json = fetch_json(["status" => "Data keywords is undefined or does not exist", "data" => 0], 400);
+                echo $d_json;
+                exit();
+            }
 
-			$param = [
-				":usercode"    => secure_input($array['usercode']),
-				":username"    => secure_input($array['username']),
-				":password"    => secure_input(sha1($array['password'])),
-				":status"      => secure_input($array['status']),
-				":create_date" => $generate_date,
-				":update_date" => $generate_date,
-				":delete_date" => $generate_date
-			];
+            $string = [
+                ':username' => '%' . $keywords . '%',
+                ':usercode' => '%' . $keywords . '%'
+            ];
 
-			if (not_filled($param[':usercode']) || not_filled($param[':username']) || not_filled($param[':password']) || not_filled($param[':status'])) {
-				$d_json = json_fetch(["status" => "Parameter incomplete", "data" => 0], 400);
+            $d = Load::model(modelUser::class)->search_data_users($string);
+            $d_json = fetch_json(["status" => "Successfully retrieved the data", "data" => $d], 200);
 
-				echo $d_json;
-				exit();
-			} else {
-				$d = Load::model(modelUser::class)->add_data_users($param);
-				$d_json = json_fetch(["status" => "Success", "data" => $d], 200);
+            echo $d_json;
+            exit();
+        } else {
+            $d_json = fetch_json(["status" => "HTTP method incorrect", "data" => 0], 400);
+            echo $d_json;
+            exit();
+        }
+    }
 
-				echo $d_json;
-				exit();
-			}
-		} else {
-			$d_json = json_fetch(["status" => "HTTP method incorrect", "data" => 0], 400);
+    // Example method secured with JWT middleware
+    public function add_data_users()
+    {
+        $this->beforeLayer->verify_jwt();
 
-			echo $d_json;
-			exit();
-		}
-	}
+        if (request_is_post()) {
+            $generate_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
 
-	public function get_data_users($id)
-	{
-		if (request_is_get()) {
-			if (not_filled($id)) {
-				$d_json = json_fetch(["status" => "Data id is undefined or does not exist", "data" => 0], 400);
+            $param = [
+                ":usercode"    => secure_input(fetch_raw_json('usercode')),
+                ":username"    => secure_input(fetch_raw_json('username')),
+                ":password"    => secure_input(sha1(fetch_raw_json('password'))),
+                ":status"      => secure_input(fetch_raw_json('status')),
+                ":create_date" => $generate_date,
+                ":update_date" => $generate_date,
+                ":delete_date" => $generate_date
+            ];
 
-				echo $d_json;
-				exit();
-			} else {
-				$params = [
-					':id' => $id
-				];
+            if (not_filled($param[':usercode']) || not_filled($param[':username']) || not_filled($param[':password']) || not_filled($param[':status'])) {
+                $d_json = fetch_json(["status" => "Parameter incomplete", "data" => 0], 400);
+                echo $d_json;
+                exit();
+            } else {
+                $d = Load::model(modelUser::class)->add_data_users($param);
+                $d_json = fetch_json(["status" => "Successfully entered data", "data" => $d], 200);
+                echo $d_json;
+                exit();
+            }
+        } else {
+            $d_json = fetch_json(["status" => "HTTP method incorrect", "data" => 0], 400);
+            echo $d_json;
+            exit();
+        }
+    }
 
-				$d = Load::model(modelUser::class)->get_data_users($params);
-				$d_json = json_fetch(["status" => "Success", "data" => $d], 200);
+    // Example method secured with JWT middleware
+    public function get_data_users($id)
+    {
+        $this->beforeLayer->verify_jwt();
 
-				echo $d_json;
-				exit();
-			}
-		} else {
-			$d_json = json_fetch(["status" => "HTTP method incorrect", "data" => 0], 400);
+        if (request_is_get()) {
+            if (not_filled($id)) {
+                $d_json = fetch_json(["status" => "Data id is undefined or does not exist", "data" => 0], 400);
+                echo $d_json;
+                exit();
+            } else {
+                $params = [
+                    ':id' => $id
+                ];
 
-			echo $d_json;
-			exit();
-		}
-	}
+                $d = Load::model(modelUser::class)->get_data_users($params);
+                $d_json = fetch_json(["status" => "Success", "data" => $d], 200);
+                echo $d_json;
+                exit();
+            }
+        } else {
+            $d_json = fetch_json(["status" => "HTTP method incorrect", "data" => 0], 400);
+            echo $d_json;
+            exit();
+        }
+    }
 
-	public function update_data_users($id)
-	{
-		if (request_is_put()) {
-			$array         = request_as_array();
-			$generate_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
+    // Example method secured with JWT middleware
+    public function update_data_users($id)
+    {
+        $this->beforeLayer->verify_jwt();
 
-			$param = [
-				":id"          => $id,
-				":usercode"    => secure_input($array['usercode']),
-				":username"    => secure_input($array['username']),
-				":password"    => secure_input(sha1($array['password'])),
-				":status"      => secure_input($array['status']),
-				":update_date" => $generate_date,
-			];
+        if (request_is_put()) {
+            $generate_date = gmdate('Y-m-d H:i:s', time() + 60 * 60 * 7);
 
-			if (not_filled($param[':id']) || not_filled($param[':usercode']) || not_filled($param[':username']) || not_filled($param[':password']) || not_filled($param[':status'])) {
-				$d_json = json_fetch(["status" => "Parameter incomplete", "data" => 0], 400);
+            $param = [
+                ":id" => $id,
+                ":usercode" => secure_input(fetch_raw_json('usercode')),
+                ":username" => secure_input(fetch_raw_json('username')),
+                ":password" => secure_input(sha1(fetch_raw_json('password'))),
+                ":status" => secure_input(fetch_raw_json('status')),
+                ":update_date" => $generate_date,
+            ];
 
-				echo $d_json;
-				exit();
-			} else {
-				Load::model(modelUser::class)->update_data_users($param);
-				$d_json = json_fetch(["status" => "Success", "data" => 1], 200);
+            if (not_filled($param[':id']) || not_filled($param[':usercode']) || not_filled($param[':username']) || not_filled($param[':password']) || not_filled($param[':status'])) {
+                $d_json = fetch_json(["status" => "Parameter incomplete", "data" => 0], 400);
+                echo $d_json;
+                exit();
+            } else {
+                Load::model(modelUser::class)->update_data_users($param);
+                $d_json = fetch_json(["status" => "Successfully changed the data", "data" => 1], 200);
+                echo $d_json;
+                exit();
+            }
+        } else {
+            $d_json = fetch_json(["status" => "HTTP method incorrect", "data" => 0], 400);
+            echo $d_json;
+            exit();
+        }
+    }
 
-				echo $d_json;
-				exit();
-			}
-		} else {
-			$d_json = json_fetch(["status" => "HTTP method incorrect", "data" => 0], 400);
+    // Example method secured with JWT middleware
+    public function delete_data_users($id)
+    {
+        $this->beforeLayer->verify_jwt();
 
-			echo $d_json;
-			exit();
-		}
-	}
+        $params = [
+            ':id' => $id
+        ];
 
-	public function delete_data_users($id)
-	{
-		$params = [
-			':id' => $id
-		];
+        Load::model(modelUser::class)->delete_data_users($params);
+        $d_json = fetch_json(["status" => "Successfully deleted data", "data" => 1], 200);
 
-		Load::model(modelUser::class)->delete_data_users($params);
-		$d_json = json_fetch(["status" => "Success", "data" => 1], 200);
-
-		echo $d_json;
-		exit();
-	}
+        echo $d_json;
+        exit();
+    }
 }

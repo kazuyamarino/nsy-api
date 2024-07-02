@@ -5,7 +5,7 @@ namespace System\Migrations;
 /**
  * The migration class
  */
-class users_table_29062024_225137
+class api_table_29062024_225137
 {
 
 	/**
@@ -19,7 +19,7 @@ class users_table_29062024_225137
 	 */
 	public function up()
 	{
-		Mig::connect()->create_table('users_table', [
+		Mig::connect()->create_table('api_table', [
 			Mig::bigint('id', 20)->auto_increment(),
 			Mig::varchar('usercode')->not_null(),
 			Mig::varchar('username')->not_null(),
@@ -36,6 +36,6 @@ class users_table_29062024_225137
 	 */
 	public function down()
 	{
-		Mig::connect()->drop_exist_table(['users_table']);
+		Mig::connect()->drop_exist_table(['api_table']);
 	}
 }
