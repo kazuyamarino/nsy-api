@@ -41,61 +41,118 @@ Because this time I only created an API, so I only used Models and Controllers, 
 Don't forget, I also created a Routing to create an endpoint for data access, here I created a Route with the name `Api.php` in the `System/Routes` folder, then registered the **User Defined Routes** parameter in `Config/App.php`.
 
 ```php
+use System\Middlewares\BeforeLayer;
+
+// Login endpoint
+Route::post('/login', [System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'login']);
+
+// Api Route
 Route::group('/users', function() {
- // Show all data users
- Route::get('/data', [System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'show_data_users']);
+    $middleware = [new BeforeLayer()];
 
- // Search user data based on username
- Route::post('/data', [System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'search_data_users']);
+    // Show all data users
+    Route::get('/data', function () use ($middleware) {
+        Route::middleware($middleware)->for([System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'show_data_users']);
+    });
 
- // Insert new user data
- Route::post('/insert', [System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'add_data_users']);
+    // Search user data based on username
+    Route::post('/data', function () use ($middleware) {
+        Route::middleware($middleware)->for([System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'search_data_users']);
+    });
 
- // Get user data based on id
- Route::get('/(:num)', [System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'get_data_users']);
+    // Insert new user data
+    Route::post('/insert', function () use ($middleware) {
+        Route::middleware($middleware)->for([System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'add_data_users']);
+    });
 
- // Update user data based on id
- Route::put('/(:num)', [System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'update_data_users']);
+    // Get user data based on id
+    Route::get('/(:num)', function ($id) use ($middleware) {
+        Route::middleware($middleware)->for([System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'get_data_users'], $id);
+    });
 
- // Delete user data based on id
- Route::delete('/(:num)', [System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'delete_data_users']);
+    // Update user data based on id
+    Route::put('/(:num)', function ($id) use ($middleware) {
+        Route::middleware($middleware)->for([System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'update_data_users'], $id);
+    });
+
+    // Delete user data based on id
+    Route::delete('/(:num)', function ($id) use ($middleware) {
+        Route::middleware($middleware)->for([System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'delete_data_users'], $id);
+    });
 });
+
 ```
 
 ---
 
 ## Endpoint
 
+**To generated the token from the table the request can be written in URL format as:**
+
+```php
+URL: /nsy-api/nsy-api/login
+Method: POST
+Authorization: Bearer your_generated_token
+```
+
+In the body, select raw and JSON, then provide this:
+
+```json
+{
+  "username": "vikry",
+  "password": "timnas"
+}
+```
+
 **To read all records from the table the request can be written in URL format as:**
 
 ```php
-GET /users/data
+URL: /nsy-api/users/data
+Method: GET
+Authorization: Bearer your_generated_token
 ```
 
 **To search for records in the table the request can be written in URL format as:**
 
 ```php
-POST /users/data
+URL: /nsy-api/users/data
+Method: POST
+Authorization: Bearer your_generated_token
+```
 
-Create Body -> form-data : keywords
+In the body, select raw and JSON, then provide this:
+
+```json
+{
+    "keywords": "your_search_query"
+}
 ```
 
 **To insert records into the table the request can be written in URL format as:**
 
 ```php
-POST /users/insert
+URL: /nsy-api/users/insert
+Method: POST
+Authorization: Bearer your_generated_token
+```
 
-Create Body -> form-data : 
-1. usercode
-2. username
-3. password
-4. status
+In the body, select raw and JSON, then provide this:
+
+```json
+{
+    "usercode": "20",
+    "username": "persib",
+    "password": "maung",
+    "status": "N"
+}
 ```
 
 **To read a record by id from the table the request can be written in URL format as:**
 
 ```php
-GET /users/10
+URL: /nsy-api/users/10
+Method: GET
+Authorization: Bearer your_generated_token
 
 // Get data where id = 10
 ```
@@ -103,21 +160,29 @@ GET /users/10
 **To update a record by id from the table the request can be written in URL format as:**
 
 ```php
-PUT /users/10
+URL: /nsy-api/users/10
+Method: PUT
+Authorization: Bearer your_generated_token
 
 // Update data where id = 10
+```
 
-Create Body -> form-data : 
-1. usercode
-2. username
-3. password
-4. status
+In the body, select raw and JSON, then provide this:
+```json
+{
+    "usercode": "20",
+    "username": "persib",
+    "password": "timnas",
+    "status": "Y"
+}
 ```
 
 **To remove a record by id from the table the request can be written in URL format as:**
 
 ```php
-DELETE /users/10
+URL: /nsy-api/users/10
+Method: DELETE
+Authorization: Bearer your_generated_token
 
 // remove data where id = 10
 ```
