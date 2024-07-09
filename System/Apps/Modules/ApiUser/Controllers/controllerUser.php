@@ -26,7 +26,7 @@ class controllerUser extends Load
 
             if ($user) {
                 $token = $this->beforeLayer->generate_jwt($user['username']);
-                $d_json = fetch_json(["status" => "Successfully generated tokens", "token" => $token], 200);
+                $d_json = fetch_json(["status" => "Successfully generated tokens", "username" => $user['username'], "token" => $token], 200);
                 echo $d_json;
                 exit();
             } else {
