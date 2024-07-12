@@ -16,6 +16,9 @@ use System\Middlewares\BeforeLayer;
 // Login endpoint
 Route::post('/login', [System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'login']);
 
+// Refresh token endpoint
+Route::post('/refresh-token', [System\Apps\Modules\ApiUser\Controllers\controllerUser::class, 'refresh_token']);
+
 // Api Route
 Route::group('/users', function() {
     $middleware = [new BeforeLayer()];

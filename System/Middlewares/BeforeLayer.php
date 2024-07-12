@@ -26,7 +26,7 @@ class BeforeLayer implements LayerInterface
             'iss' => "https://nsyframework.com/", // Issuer
             'aud' => "https://nsyframework.com/", // Audience
             'iat' => time(), // Issued at
-            'exp' => time() + (5 * 60), // Expiration time (5 minutes)
+            'exp' => time() + (1 * 60), // Expiration time (1 minute)
             'data' => [
                 'username' => $username
             ]
@@ -59,6 +59,34 @@ class BeforeLayer implements LayerInterface
         }
     }
 
+    // Middleware to refresh JWT token
+    public function refresh_jwt()
+    {
+        $headers = apache_request_headers();
+        if (isset($headers['Authorization'])) {
+            $authHeader = $headers['Authorization'];
+            $arr = explode(" ", $authHeader);
+            $jwt = $arr[1];
+
+            if ($jwt) {
+                try {
+                    $decoded = JWT::decode($jwt, new Key($this->secret_key, 'HS256'));
+                    $username = $decoded->data->username;
+
+                    // Generate a new token
+                    $new_jwt = $this->generate_jwt($username);
+                    echo json_encode(["token" => $new_jwt]);
+                } catch (\Exception $e) {
+                    $this->respondUnauthorized("Access denied: " . $e->getMessage());
+                }
+            } else {
+                $this->respondUnauthorized("Token not found");
+            }
+        } else {
+            $this->respondUnauthorized("Authorization header not found");
+        }
+    }
+
     // Helper method to respond with unauthorized status
     private function respondUnauthorized($message)
     {
@@ -67,3 +95,4 @@ class BeforeLayer implements LayerInterface
         exit();
     }
 }
+
