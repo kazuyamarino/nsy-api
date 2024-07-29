@@ -101,45 +101,14 @@ class controllerUser extends Load
         exit();
     }
 
-    // Example method secured with JWT middleware
-    public function search_data_users()
-    {
-        $this->beforeLayer->verify_jwt();
-
-        if (request_is_post()) {
-            $keywords = fetch_raw_json('keywords');
-
-            if (not_filled($keywords)) {
-                $d_json = fetch_json(["status" => "Data keywords is undefined or does not exist.", "data" => ""], 400);
-                echo $d_json;
-                exit();
-            }
-
-            $string = [
-                ':username' => '%' . $keywords . '%',
-                ':usercode' => '%' . $keywords . '%'
-            ];
-
-            $d = Load::model(modelUser::class)->search_data_users($string);
-            $d_json = fetch_json(["status" => "Successfully retrieved the data.", "data" => $d], 200);
-
-            echo $d_json;
-            exit();
-        } else {
-            $d_json = fetch_json(["status" => "HTTP method incorrect.", "data" => ""], 400);
-            echo $d_json;
-            exit();
-        }
-    }
-
-    // Example method secured with JWT middleware
+	// Example method secured with JWT middleware
     public function get_data_users($id)
     {
         $this->beforeLayer->verify_jwt();
 
         if (request_is_get()) {
             if (not_filled($id)) {
-                $d_json = fetch_json(["status" => "Data id is undefined or does not exist.", "data" => ""], 400);
+                $d_json = fetch_json(["status" => 400, "message" => "Data id is undefined or does not exist.", "data" => ""], 400);
                 echo $d_json;
                 exit();
             } else {
@@ -148,18 +117,18 @@ class controllerUser extends Load
                 ];
 
                 $d = Load::model(modelUser::class)->get_data_users($params);
-                $d_json = fetch_json(["status" => "Success", "data" => $d], 200);
+                $d_json = fetch_json(["status" => 200, "message" => "Success get the data detail.", "data" => $d], 200);
                 echo $d_json;
                 exit();
             }
         } else {
-            $d_json = fetch_json(["status" => "HTTP method incorrect.", "data" => ""], 400);
+            $d_json = fetch_json(["status" => 400, "message" => "HTTP method incorrect.", "data" => ""], 400);
             echo $d_json;
             exit();
         }
     }
 
-    // Example method secured with JWT middleware
+	// Example method secured with JWT middleware
     public function update_data_users($id)
     {
         $this->beforeLayer->verify_jwt();
@@ -177,17 +146,48 @@ class controllerUser extends Load
             ];
 
             if (not_filled($param[':id']) || not_filled($param[':usercode']) || not_filled($param[':username']) || not_filled($param[':password']) || not_filled($param[':status'])) {
-                $d_json = fetch_json(["status" => "Parameter incomplete", "data" => ""], 400);
+                $d_json = fetch_json(["status" => 400, "message" => "Parameter incomplete.", "data" => ""], 400);
                 echo $d_json;
                 exit();
             } else {
                 Load::model(modelUser::class)->update_data_users($param);
-                $d_json = fetch_json(["status" => "Successfully changed the data", "data" => 1], 200);
+                $d_json = fetch_json(["status" => 200, "message" => "Successfully changed the data.", "data" => 1], 200);
                 echo $d_json;
                 exit();
             }
         } else {
-            $d_json = fetch_json(["status" => "HTTP method incorrect", "data" => ""], 400);
+            $d_json = fetch_json(["status" => 400, "message" => "HTTP method incorrect.", "data" => ""], 400);
+            echo $d_json;
+            exit();
+        }
+    }
+
+    // Example method secured with JWT middleware
+    public function search_data_users()
+    {
+        $this->beforeLayer->verify_jwt();
+
+        if (request_is_post()) {
+            $keywords = fetch_raw_json('keywords');
+
+            if (not_filled($keywords)) {
+                $d_json = fetch_json(["status" => 400, "message" => "Data keywords is undefined or does not exist.", "data" => ""], 400);
+                echo $d_json;
+                exit();
+            }
+
+            $string = [
+                ':username' => '%' . $keywords . '%',
+                ':usercode' => '%' . $keywords . '%'
+            ];
+
+            $d = Load::model(modelUser::class)->search_data_users($string);
+            $d_json = fetch_json(["status" => 200, "message" => "Successfully retrieved the data.", "data" => $d], 200);
+
+            echo $d_json;
+            exit();
+        } else {
+            $d_json = fetch_json(["status" => 400, "message" => "HTTP method incorrect.", "data" => ""], 400);
             echo $d_json;
             exit();
         }
@@ -203,7 +203,7 @@ class controllerUser extends Load
         ];
 
         Load::model(modelUser::class)->delete_data_users($params);
-        $d_json = fetch_json(["status" => "Successfully deleted data", "data" => 1], 200);
+        $d_json = fetch_json(["status" => 200, "message" => "Successfully deleted data.", "data" => 1], 200);
 
         echo $d_json;
         exit();
